@@ -42,6 +42,7 @@ type WebsocketConnection struct {
 type WsJsonResponse struct {
 	Action         string   `json:"action"`
 	Message        string   `json:"message"`
+	Username       string   `json:"username"`
 	MessageType    string   `json:"message_type"`
 	ConnectedUsers []string `json:"connected_users"`
 }
@@ -117,6 +118,12 @@ func ListenToWsChannel() {
 			delete(clients, e.Conn)
 			users := getUserList()
 			response.ConnectedUsers = users
+			broadcastToAll(response)
+		case "message":
+			response.Action = "message"
+			response.Message = e.Message
+			response.Username = e.Username
+			response.MessageType = "text"
 			broadcastToAll(response)
 		}
 	}
