@@ -143,18 +143,17 @@
             connectionBadge.textContent = "Connected";
             
             // Send join message
-            // sendMessage({
-            //    type: "join",
-            //    username: username,
-            //    timestamp: new Date().toISOString()
-            //});
+            sendMessage({
+                action: "join",
+                username: username
+            });
         };
 
         socket.onmessage = (event) => {
             try {
                 console.log(event)
                 const data = JSON.parse(event.data);
-                // handleIncomingMessage(data);
+                handleIncomingMessage(data);
             } catch (e) {
                 console.error("Error parsing message:", e);
             }
@@ -212,13 +211,13 @@
     }
 
     function handleIncomingMessage(data) {
-        switch (data.type) {
+        switch (data.action) {
             case "message":
                 displayChatMessage(data);
                 break;
-            case "user_joined":
+            case "list_users":
                 displaySystemMessage(`${data.username} joined the chat`);
-                updateOnlineUsers(data.users);
+                updateOnlineUsers(data.connected_users);
                 break;
             case "user_left":
                 displaySystemMessage(`${data.username} left the chat`);
