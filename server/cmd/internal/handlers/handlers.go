@@ -28,16 +28,27 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type WebsocketConnection struct {
+	*websocket.Conn
+}
+
 // WsJsonResponse defines the websocket response
 type WsJsonResponse struct {
-	Action string `json:"action"`
-	Message string `json:"message"`
+	Action      string `json:"action"`
+	Message     string `json:"message"`
 	MessageType string `json:"message_type"`
 }
 
+// WsJsonPayload defines the websocket message
+type WsJsonPayload struct {
+	Action   string              `json:"action"`
+	Message  string              `json:"message"`
+	Username string              `json:"username"`
+	Conn     WebsocketConnection `json:"-"`
+}
 
 // WSEndpoint upgrades the connection to a websocket connection
-func WSEndpoint(w http.ResponseWriter, r *http.Request){
+func WSEndpoint(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgradeConnection.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
