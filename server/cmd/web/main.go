@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"websockets/cmd/internal/handlers"
 )
 
 func main() {
@@ -17,6 +18,9 @@ func main() {
 
 	log.Println("Starting application on port", port)
 
+	log.Println("Starting channel listener")
+	go handlers.ListenToWsChannel()
+	
 	err := http.ListenAndServe(":"+port, mux)
 	if err != nil {
 		log.Fatal(err)

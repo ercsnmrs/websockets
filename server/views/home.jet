@@ -88,7 +88,7 @@
                         
                         <!-- Message Input -->
                         <div class="input-group">
-                            <input type="text" id="message" class="form-control" placeholder="Type your message..." maxlength="500">
+                            <input type="text" id="message_input" class="form-control" placeholder="Type your message..." maxlength="500">
                             <input type="hidden" name="action id="action">
                             <button class="btn btn-primary" type="button" id="sendButton">
                                 <i class="bi bi-send"></i> Send
@@ -129,13 +129,13 @@
         username = prompt("Enter your username:") || "Anonymous";
         
         initializeWebSocket();
-        setupEventListeners();
+        //setupEventListeners();
     });
 
     function initializeWebSocket() {
         const connectionBadge = document.getElementById('connectionBadge');
         
-        socket = new WebSocket("ws://127.0.0.1:8080/ws");
+        socket = new WebSocket("ws://localhost:8080/ws");
 
         socket.onopen = () => {
             console.log("Successfully connected");
@@ -143,18 +143,18 @@
             connectionBadge.textContent = "Connected";
             
             // Send join message
-            sendMessage({
-                type: "join",
-                username: username,
-                timestamp: new Date().toISOString()
-            });
+            // sendMessage({
+            //    type: "join",
+            //    username: username,
+            //    timestamp: new Date().toISOString()
+            //});
         };
 
         socket.onmessage = (event) => {
             try {
+                console.log(event)
                 const data = JSON.parse(event.data);
-                console.log(data)
-                handleIncomingMessage(data);
+                // handleIncomingMessage(data);
             } catch (e) {
                 console.error("Error parsing message:", e);
             }
@@ -174,7 +174,7 @@
     }
 
     function setupEventListeners() {
-        const message = document.getElementById('message');
+        const message = document.getElementById('message_input');
         const sendButton = document.getElementById('sendButton');
 
         // Send message on button click
@@ -191,8 +191,8 @@
     }
 
     function sendChatMessage() {
-        const message = document.getElementById('message');
-        const message = message.value.trim();
+        const message_input = document.getElementById('message_input');
+        const message = message_input.value.trim();
         
         if (message && socket && socket.readyState === WebSocket.OPEN) {
             sendMessage({
